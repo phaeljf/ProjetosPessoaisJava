@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Simulado • Resultado</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+
+    <style>
+        :root{
+            --bs-primary:#0b2a5b; /* azul escuro */
+            --bs-success:#28a745;
+            --bs-danger:#dc3545;
+        }
+        body{
+            min-height:100vh;
+            background:
+                    radial-gradient(1200px 600px at 10% -20%, rgba(11,42,91,.08), transparent 60%),
+                    radial-gradient(1200px 600px at 110% 120%, rgba(11,42,91,.08), transparent 60%),
+                    #f7f9fc;
+            padding-bottom: 84px; /* espaço pro rodapé fixo dos botões */
+        }
+        .card-glass{
+            background: rgba(255,255,255,.94);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(11,42,91,.06);
+            box-shadow: 0 10px 30px rgba(11,42,91,.08);
+        }
+        .brand-logo{height:32px}
+        .metric-card{ border-left: .35rem solid var(--bs-primary); }
+        .metric-ok{ border-left-color: var(--bs-success); }
+        .metric-bad{ border-left-color: var(--bs-danger); }
+        .answer-line{border-radius:.5rem; padding:.75rem 1rem; background:#fff; border:1px solid #e5e7eb}
+        .answer-line + .answer-line{margin-top:.75rem}
+        .badge-wide{min-width: 84px; justify-content:center}
+        /* botãozão fixo no rodapé */
+        .action-footer{
+            position: fixed; left:0; right:0; bottom:0; z-index:1030;
+            background: rgba(33,37,41,.98);
+            padding: .75rem 1rem;
+            box-shadow: 0 -6px 20px rgba(0,0,0,.12);
+        }
+        @media print{
+            .action-footer, nav{ display:none !important; }
+            body{ padding:0; background:#fff; }
+            .card-glass{ box-shadow:none; border:0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img class="brand-logo me-2" th:src="@{/assets/img/logo.png}" alt="Simulado Online">
+            <span>Simulado Online</span>
+        </a>
+        <div class="text-white-50 small">
+            <span>Participante: </span><strong th:text="${nome}">Nome</strong>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    <div class="row g-3">
+        <!-- Métricas -->
+        <div class="col-12 col-md-4">
+            <div class="card card-glass metric-card metric-ok">
+                <div class="card-body">
+                    <div class="text-muted small">Acertos</div>
+                    <div class="display-6 fw-bold" th:text="${acertos}">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card card-glass metric-card metric-bad">
+                <div class="card-body">
+                    <div class="text-muted small">Erros</div>
+                    <div class="display-6 fw-bold" th:text="${erros}">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card card-glass metric-card">
+                <div class="card-body">
+                    <div class="text-muted small">Aproveitamento</div>
+                    <div class="display-6 fw-bold"
+                         th:text="${#numbers.formatDecimal((acertos*100.0)/total, 1, 1)} + ' %'">0 %</div>
+                    <div class="text-muted small" th:text="'Total: ' + ${total} + ' questões'">Total</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gabarito -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card card-glass">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 class="h4 mb-4">Gabarito</h2>
+
+                    <div th:each="q,idx : ${questoes}" class="mb-3">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="fw-semibold" th:text="'#' + (${idx.index}+1) + ' — ' + ${q.areaNome}">#1 — Área</div>
+                            <span th:with="ok=${q.escolhida != null and #strings.equalsIgnoreCase(#strings.trim(q.escolhida),
+                                               #strings.trim(q.correta))}" th:text="${ok} ? '✓' : '✗'">✓</span>
+                        </div>
+
+                        <div class="mb-2" th:text="${q.enunciado}">Enunciado</div>
+
+                        <div class="answer-line">
+                            <div class="small text-muted">Marcada</div>
+                            <div th:text="${q.escolhida} ?: '-'">-</div>
+                        </div>
+
+                        <div class="answer-line">
+                            <div class="small text-muted">Correta</div>
+                            <div th:text="${q.correta}">A</div>
+                        </div>
+                    </div>
+
+                    <hr class="mt-4"/>
+                    <div class="text-muted small">
+                        Observação: respostas não marcadas contam como erro (0 ponto).
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Rodapé de ações (fixo) -->
+<div class="action-footer">
+    <div class="container d-flex justify-content-between">
+        <a class="btn btn-outline-light" th:href="@{/}">← Nova tentativa</a>
+        <!-- Link do PDF: ajuste a rota quando implementar -->
+        <a class="btn btn-success" th:href="@{/resultado/pdf}">Baixar PDF</a>
+    </div>
+</div>
+
+<!-- Bootstrap + script do tema -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

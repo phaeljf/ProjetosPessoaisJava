@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>Resultado do Simulado</title>
+  <style>
+    /* Página e tipografia */
+    @page { size: A4; margin: 18mm 15mm; }
+    body { margin:0; padding:0; background:#fff;
+      font-family: Arial, Helvetica, sans-serif; font-size: 12pt; color:#222; }
+    h1 { margin: 0 0 8px; font-size: 20pt; }
+    h2 { margin: 12px 0 6px; font-size: 14pt; }
+    .muted { color:#666; font-size:10pt; }
+    .line { border-top:1px solid #ddd; margin:12px 0; }
+
+    /* Cabeçalho sem flex (tabela é bem suportada) */
+    .top { width:100%; border-collapse: collapse; margin-bottom: 6px; }
+    .top td { vertical-align:middle; }
+    .logo { height:28px; }
+    .top .right { text-align:right; }
+
+    /* Itens do gabarito */
+    .q { margin:10px 0; page-break-inside: avoid; }
+    .tag { display:inline-block; padding:2px 6px; border-radius:4px; font-size:9pt; border:1px solid #ccc; }
+    .ok  { background:#eaf6ee; border-color:#9ad0b0; color:#175f3b; }
+    .bad { background:#fdecec; border-color:#f1b0b7; color:#7c1d1d; }
+
+    /* Segurança de imagem (não estourar largura) */
+    img { max-width: 200px; height: auto; }
+  </style>
+</head>
+<body>
+<table class="top">
+  <tr>
+    <td><img class="logo" th:src="${baseUrl} + 'assets/img/logo.png'" alt="Simulado Online"/></td>
+    <td class="right muted" th:text="${#calendars.format(#calendars.createNow(), 'dd/MM/yyyy HH:mm')}">Data</td>
+  </tr>
+</table>
+
+<h1>Resultado do Simulado</h1>
+<div class="muted" th:text="'Participante: ' + ${nome}">Participante</div>
+<div class="muted">
+  <span th:text="'Acertos: ' + ${acertos}"></span> ·
+  <span th:text="'Erros: ' + ${erros}"></span> ·
+  <span th:text="'Total: ' + ${total}"></span> ·
+  <span th:text="'Aproveitamento: ' + ${#numbers.formatDecimal((acertos*100.0)/total,1,1)} + ' %'">%</span>
+</div>
+
+<div class="line"></div>
+
+<h2>Gabarito</h2>
+<div th:each="q,idx : ${questoes}" class="q">
+  <strong th:text="'#' + (${idx.index}+1) + ' — ' + ${q.areaNome}">#1 — Área</strong><br/>
+  <div th:text="${q.enunciado}">Enunciado</div>
+  <div>
+    <span class="muted">Marcada: </span><span th:text="${q.escolhida} ?: '-'">-</span>
+    &#160; | &#160;
+    <span class="muted">Correta: </span><span th:text="${q.correta}">A</span>
+    &#160; | &#160;
+    <span th:with="ok=${q.escolhida != null and
+                   #strings.equalsIgnoreCase(#strings.trim(q.escolhida),
+                                             #strings.trim(q.correta))}"
+          th:classappend="${ok} ? 'tag ok' : 'tag bad'"
+          th:text="${ok} ? 'ACERTOU' : 'ERROU'">ACERTOU</span>
+  </div>
+</div>
+</body>
+</html>

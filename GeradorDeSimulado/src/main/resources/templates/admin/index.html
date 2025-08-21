@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Gerador de Simulado</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<h2>Admin</h2>
+<p>Bem-vindo, <span th:text="${userName}">Admin</span>!</p>
+
+<nav>
+    <ul>
+        <li><a href="/admin/areas">Gerenciar Áreas</a></li>
+    </ul>
+</nav>
+
+<p><a href="/logout">Sair</a></p>
+</body>
+</html>

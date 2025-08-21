@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Configurar • Simulado Online</title>
+
+  <!-- CSS do tema (The Big Picture) -->
+  <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+
+  <!-- Ajustes visuais do projeto -->
+  <style>
+    /* sua identidade (azul escuro + verde) */
+    :root{
+      --bs-primary:#0b2a5b;     /* azul escuro */
+      --bs-success:#28a745;     /* verde de acerto */
+    }
+    /* fundo suave, mantendo vibe do template */
+    body{
+      min-height:100vh;
+      background:
+              radial-gradient(1200px 600px at 10% -20%, rgba(11,42,91,.08), transparent 60%),
+              radial-gradient(1200px 600px at 110% 120%, rgba(11,42,91,.08), transparent 60%),
+              #f7f9fc;
+    }
+    /* cartão “glass” */
+    .card-glass{
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(11,42,91,.06);
+      box-shadow: 0 10px 30px rgba(11,42,91,.08);
+    }
+    .brand-logo{ height: 36px; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar simples, combinando com a landing -->
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+      <img class="brand-logo me-2" th:src="@{/assets/img/logo.png}" alt="Simulado Online">
+      <span>Simulado Online</span>
+    </a>
+  </div>
+</nav>
+
+<main class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="card card-glass">
+        <div class="card-body p-4 p-lg-5">
+          <h1 class="h3 mb-3">Configurar Simulado</h1>
+          <p class="text-muted mb-4">Defina seu nome, tempo (opcional) e quantidades por área.</p>
+
+          <form method="post" action="/iniciar" class="row g-3">
+            <!-- Nome -->
+            <div class="col-12">
+              <label class="form-label">Seu nome</label>
+              <input name="nome" class="form-control form-control-lg" placeholder="Ex.: Ana Souza" required>
+            </div>
+
+            <!-- Tempo -->
+            <div class="col-12">
+              <label class="form-label">Tempo (opcional)</label>
+              <div class="d-flex gap-2">
+                <input type="number" name="horas" min="0" value="0" class="form-control" style="max-width:120px" placeholder="Horas">
+                <input type="number" name="minutos" min="0" max="59" value="0" class="form-control" style="max-width:120px" placeholder="Minutos">
+              </div>
+              <div class="form-text">Use 0 para <b>sem limite</b>.</div>
+            </div>
+
+            <!-- Áreas e quantidades -->
+            <div class="col-12">
+              <label class="form-label">Áreas e quantidades</label>
+
+              <div class="list-group">
+                <!-- uma linha por área -->
+                <div class="list-group-item d-flex align-items-center justify-content-between"
+                     th:each="a : ${areas}">
+                  <div class="me-3">
+                    <div class="fw-semibold" th:text="${a.nome}">Área</div>
+                    <small class="text-muted" th:text="${a.descricao}">Descrição</small>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2">
+                    <input type="hidden" name="areaId" th:value="${a.id}">
+                    <input type="number" name="quantidade" min="0" max="100" value="0"
+                           class="form-control" style="width:110px" placeholder="Qtd.">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-text mt-2">Deixe 0 para não incluir uma área.</div>
+            </div>
+
+            <!-- Ações -->
+            <div class="col-12 d-flex justify-content-between pt-2">
+              <a class="btn btn-outline-dark" th:href="@{/}">← Voltar</a>
+              <button type="submit" class="btn btn-primary btn-lg px-4">
+                Iniciar simulado
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+      <!-- dica de contraste -->
+      <p class="text-center text-muted mt-3 small">
+        Dica: mantenha contraste alto para enunciados longos e acessibilidade.
+      </p>
+    </div>
+  </div>
+</main>
+
+<!-- JS Bootstrap + script do tema -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

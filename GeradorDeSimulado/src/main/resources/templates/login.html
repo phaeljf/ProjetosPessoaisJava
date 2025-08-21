@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Gerador de Simulado</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<h2>Login</h2>
+
+<div th:if="${info}" th:text="${info}" style="color: #2c7;"></div>
+<div th:if="${error}" th:text="${error}" style="color: #c22;"></div>
+
+<form method="post" action="/login">
+  <div>
+    <label>E-mail</label><br>
+    <input type="email" name="email" required value="admin@admin.com">
+  </div>
+  <div>
+    <label>Senha</label><br>
+    <input type="password" name="password" required value="123456">
+  </div>
+  <div style="margin-top:10px;">
+    <button type="submit">Entrar</button>
+  </div>
+</form>
+
+<p style="margin-top:10px;"><a href="/">Voltar</a></p>
+</body>
+</html>

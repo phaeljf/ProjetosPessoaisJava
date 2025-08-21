@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${title}">Área</title>
+</head>
+<body>
+<h2 th:text="${title}">Área</h2>
+
+<p><a th:href="@{/admin/areas}">← Listar</a></p>
+
+<form th:action="@{/admin/areas}" method="post" th:object="${area}">
+  <input type="hidden" th:field="*{id}" />
+
+  <div>
+    <label>Nome *</label><br>
+    <input type="text" th:field="*{name}" required/>
+    <div style="color:#c22"
+         th:if="${#fields.hasErrors('name')}"
+         th:errors="*{name}">
+      <!-- mensagens de erro do campo -->
+    </div>
+  </div>
+
+  <div style="margin-top:8px;">
+    <label>Descrição</label><br>
+    <textarea th:field="*{description}" rows="3"></textarea>
+  </div>
+
+  <div style="margin-top:8px;" th:if="${area.id != null}">
+    <label>Status:</label>
+    <span th:text="${area.active} ? 'Ativa' : 'Inativa'">Ativa</span>
+  </div>
+
+  <div style="margin-top:10px;">
+    <button type="submit">Salvar</button>
+  </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Áreas</title>
+</head>
+<body>
+<h2>Áreas</h2>
+
+<div th:if="${msg}" th:text="#{${msg}}" style="color:#2c7;"></div>
+
+<p><a href="/admin">← Voltar</a> | <a href="/admin/areas/new">Nova Área</a></p>
+
+<table border="1" cellspacing="0" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Ativa</th>
+        <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${areas}">
+        <td th:text="${a.id}">1</td>
+        <td th:text="${a.name}">Português</td>
+        <td th:text="${a.description}">Gramática</td>
+        <td th:text="${a.active ? 'Sim' : 'Não'}">Sim</td>
+        <td>
+            <a th:href="@{|/admin/areas/${a.id}|}">Editar</a>
+            <form th:action="@{|/admin/areas/${a.id}/toggle|}" method="post" style="display:inline;">
+                <button type="submit" th:text="${a.active ? 'Inativar' : 'Ativar'}">Inativar</button>
+            </form>
+            <form th:action="@{|/admin/areas/${a.id}/delete|}" method="post" style="display:inline;"
+                  onsubmit="return confirm('Remover esta área?');">
+                <button type="submit">Excluir</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(areas)}">
+        <td colspan="5">Nenhuma área cadastrada ainda.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
